@@ -7,7 +7,9 @@ use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
 
 // Defining constant to satisfy SonarQube (php:S1192)
-const PROFILE_PATH = '/profile';
+if (!defined('PROFILE_PATH')) {
+    define('PROFILE_PATH', '/profile');
+}
 
 Route::get('/', function () {
     // Using Auth::check() instead of auth()->check() to satisfy Intelephense
