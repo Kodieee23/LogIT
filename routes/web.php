@@ -3,6 +3,7 @@
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\AdminController;
+use App\Http\Controllers\TaskController;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
 
@@ -24,6 +25,9 @@ Route::post('/forgot-password-request', [App\Http\Controllers\Auth\Authenticated
 Route::middleware('auth')->group(function () {
     // Dashboard
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+    
+    // Tasks
+    Route::get('/tasks', [TaskController::class, 'index'])->name('tasks.index');
     Route::post('/dashboard/task', [DashboardController::class, 'store'])->name('dashboard.task.store');
     Route::patch('/dashboard/task/{task}', [DashboardController::class, 'updateStatus'])->name('dashboard.task.update');
     Route::post('/dashboard/task/{task}/comment', [DashboardController::class, 'storeComment'])->name('dashboard.task.comment');

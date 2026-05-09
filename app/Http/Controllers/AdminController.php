@@ -13,20 +13,7 @@ class AdminController extends Controller
         $users = User::all();
         $categories = Category::all();
 
-        $tasksByCategory = \App\Models\TaskLog::select('category_id', \Illuminate\Support\Facades\DB::raw('count(*) as total'))
-            ->where('department', '!=', 'System Auth')
-            ->groupBy('category_id')
-            ->with('category')
-            ->get();
-        
-        $chartLabels = [];
-        $chartData = [];
-        foreach ($tasksByCategory as $taskCount) {
-            $chartLabels[] = $taskCount->category ? $taskCount->category->name : 'Uncategorized';
-            $chartData[] = $taskCount->total;
-        }
-
-        return view('admin', compact('users', 'categories', 'chartLabels', 'chartData'));
+        return view('admin', compact('users', 'categories'));
     }
 
     public function storeUser(Request $request)

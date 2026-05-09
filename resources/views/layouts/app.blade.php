@@ -63,6 +63,9 @@
                 <span><i class='bx bx-grid-alt'></i> Dashboard</span>
                 <span id="notification-badge-sidebar" class="badge red" style="font-size: 0.6rem; padding: 0.1rem 0.3rem; display: none;">0</span>
             </a>
+            <a href="{{ route('tasks.index') }}" class="nav-item {{ request()->routeIs('tasks.*') ? 'active' : '' }}">
+                <i class='bx bx-list-ul'></i> Tasks
+            </a>
             @if (Auth::user() && Auth::user()->role === 'admin')
             <a href="{{ route('admin') }}" class="nav-item {{ request()->routeIs('admin') ? 'active' : '' }}">
                 <i class='bx bx-slider-alt'></i> Admin Panel

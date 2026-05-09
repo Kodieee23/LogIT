@@ -56,20 +56,20 @@
                                 </td>
                                 <td>
                                     <div style="display: flex; gap: 0.5rem; align-items: center; flex-wrap: wrap;">
-                                        <button onclick="editUser('{{ $user->id }}', '{{ addslashes($user->full_name) }}', '{{ addslashes($user->username) }}', '{{ $user->role }}')" class="btn btn-outline" style="padding: 0.25rem 0.5rem; font-size: 0.85rem; border-color: var(--primary); color: var(--primary);">Edit</button>
+                                        <button onclick="editUser('{{ $user->id }}', '{{ addslashes($user->full_name) }}', '{{ addslashes($user->username) }}', '{{ $user->role }}')" class="btn" style="padding: 0.5rem; background: rgba(26,75,140,0.1); color: var(--primary); border-radius: var(--radius-sm);" title="Edit"><i class='bx bx-edit'></i></button>
 
                                         @if ($user->id !== Auth::id())
                                             <form action="{{ route('admin.users.destroy', $user->id) }}" method="POST" onsubmit="return confirm('Are you sure you want to delete this user?');" style="margin: 0;">
                                                 @csrf
                                                 @method('DELETE')
-                                                <button type="submit" class="btn btn-outline" style="padding: 0.25rem 0.5rem; font-size: 0.85rem; border-color: var(--status-red); color: var(--status-red);">Delete</button>
+                                                <button type="submit" class="btn" style="padding: 0.5rem; background: rgba(239,68,68,0.1); color: var(--status-red); border-radius: var(--radius-sm);" title="Delete"><i class='bx bx-trash'></i></button>
                                             </form>
 
                                             <form action="{{ route('admin.users.reset_password', $user->id) }}" method="POST" onsubmit="const pw = prompt('Enter a new password for {{ $user->username }} (min 6 characters):'); if(pw && pw.length >= 6){ this.new_password.value = pw; return true; } else if(pw) { alert('Password must be at least 6 characters.'); } return false;" style="margin: 0;">
                                                 @csrf
                                                 @method('PATCH')
                                                 <input type="hidden" name="new_password" value="">
-                                                <button type="submit" class="btn btn-outline" style="padding: 0.25rem 0.5rem; font-size: 0.85rem; border-color: var(--status-yellow); color: var(--status-yellow);">Reset Pass</button>
+                                                <button type="submit" class="btn" style="padding: 0.5rem; background: rgba(245,158,11,0.1); color: var(--status-yellow); border-radius: var(--radius-sm);" title="Reset Password"><i class='bx bx-key'></i></button>
                                             </form>
                                         @endif
                                     </div>
@@ -143,10 +143,6 @@
                 <button type="submit" class="btn btn-outline" style="width: 100%;">Add Category</button>
             </form>
         </div>
-        <div class="glass-card" style="margin-top: 2rem;">
-            <h3 style="margin-bottom: 1.5rem; display: flex; align-items: center; gap: 0.5rem;"><i class='bx bx-pie-chart-alt-2' style="color: var(--primary);"></i> Tasks by Category</h3>
-            <canvas id="tasksChart" width="400" height="200"></canvas>
-        </div>
     </div>
 </div>
 @endsection
@@ -189,52 +185,5 @@
             form.appendChild(cancelBtn);
         }
     }
-</script>
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-<script>
-    document.addEventListener('DOMContentLoaded', function() {
-        const ctx = document.getElementById('tasksChart').getContext('2d');
-        const tasksChart = new Chart(ctx, {
-            type: 'pie',
-            data: {
-                labels: {!! json_encode($chartLabels) !!},
-                datasets: [{
-                    label: '# of Tasks',
-                    data: {!! json_encode($chartData) !!},
-                    backgroundColor: [
-                        'rgba(59, 130, 246, 0.6)',
-                        'rgba(16, 185, 129, 0.6)',
-                        'rgba(245, 158, 11, 0.6)',
-                        'rgba(239, 68, 68, 0.6)',
-                        'rgba(139, 92, 246, 0.6)',
-                        'rgba(236, 72, 153, 0.6)',
-                    ],
-                    borderColor: [
-                        'rgba(59, 130, 246, 1)',
-                        'rgba(16, 185, 129, 1)',
-                        'rgba(245, 158, 11, 1)',
-                        'rgba(239, 68, 68, 1)',
-                        'rgba(139, 92, 246, 1)',
-                        'rgba(236, 72, 153, 1)',
-                    ],
-                    borderWidth: 1
-                }]
-            },
-            options: {
-                responsive: true,
-                plugins: {
-                    legend: {
-                        position: 'right',
-                        labels: {
-                            color: '#6b7280',
-                            font: {
-                                size: 13
-                            }
-                        }
-                    }
-                }
-            }
-        });
-    });
 </script>
 @endpush

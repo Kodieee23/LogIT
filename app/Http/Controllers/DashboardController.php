@@ -57,20 +57,32 @@ class DashboardController extends Controller
         $unresolved_tasks = $allFilteredLogs->whereIn('priority', ['yellow', 'red'])->count();
         $completed_tasks = $allFilteredLogs->where('department', '!=', 'System Auth')->where('priority', 'green')->count();
 
-        if ($status_filter === 'unresolved') {
-            $recent_logs = $allFilteredLogs->whereIn('priority', ['yellow', 'red']);
-        } elseif ($status_filter === 'completed') {
-            $recent_logs = $allFilteredLogs->where('priority', 'green');
-        } else {
-            $recent_logs = $allFilteredLogs;
-        }
+        $unresolved_logs = $allFilteredLogs->whereIn('priority', ['yellow', 'red']);
+        $recent_logs = $allFilteredLogs->take(5);
 
         $categories = Category::all();
         $all_staff = User::where('role', 'staff')->get();
 
+        $chartLabels = [];
+        $chartData = [];
+
+        if ($isAdmin) {
+            $tasksByCategory = \App\Models\TaskLog::select('category_id', \Illuminate\Support\Facades\DB::raw('count(*) as total'))
+                ->where('department', '!=', 'System Auth')
+                ->groupBy('category_id')
+                ->with('category')
+                ->get();
+            
+            foreach ($tasksByCategory as $taskCount) {
+                $chartLabels[] = $taskCount->category ? $taskCount->category->name : 'Uncategorized';
+                $chartData[] = $taskCount->total;
+            }
+        }
+
         return view('dashboard', compact(
-            'recent_logs', 'categories', 'all_staff', 
-            'total_tasks', 'unresolved_tasks', 'completed_tasks', 'status_filter'
+            'recent_logs', 'unresolved_logs', 'categories', 'all_staff', 
+            'total_tasks', 'unresolved_tasks', 'completed_tasks', 'status_filter',
+            'chartLabels', 'chartData'
         ));
     }
 
